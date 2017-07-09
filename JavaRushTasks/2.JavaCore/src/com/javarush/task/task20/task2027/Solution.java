@@ -1,5 +1,6 @@
 package com.javarush.task.task20.task2027;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /* 
@@ -14,7 +15,9 @@ public class Solution {
                 {'m', 'l', 'p', 'r', 'r', 'h'},
                 {'p', 'o', 'e', 'e', 'j', 'j'}
         };
+
         detectAllWords(crossword, "home", "same");
+        //detectAllWords(crossword, "leo","rre");
         /*
 Ожидаемый результат
 home - (5, 3) - (2, 0)
@@ -22,9 +25,183 @@ same - (1, 1) - (4, 1)
          */
     }
 
-    public static List<Word> detectAllWords(int[][] crossword, String... words) {
 
-        return null;
+    public static Word checkNE(int[][] crossword, int startX, int startY, String s) {
+        int x = startX - 1;
+        int y = startY - 1;
+        for (int i = 1; i < s.length(); i++) {
+            if (x < 0 || y < 0)
+                return null;
+
+            if ((char) crossword[y][x] != s.charAt(i))
+                return null;
+            x--;
+            y--;
+        }
+        Word w = new Word(s);
+        w.setStartPoint(startX, startY);
+        w.setEndPoint(x + 1, y + 1);
+        return w;
+    }
+
+    public static Word checkN(int[][] crossword, int startX, int startY, String s) {
+        int x = startX;
+        int y = startY - 1;
+        for (int i = 1; i < s.length(); i++) {
+            if (y < 0)
+                return null;
+
+            if ((char) crossword[y][x] != s.charAt(i))
+                return null;
+            y--;
+        }
+        Word w = new Word(s);
+        w.setStartPoint(startX, startY);
+        w.setEndPoint(x, y + 1);
+        return w;
+    }
+
+    public static Word checkNW(int[][] crossword, int startX, int startY, String s) {
+        int x = startX + 1;
+        int y = startY - 1;
+        for (int i = 1; i < s.length(); i++) {
+            if (x >= crossword[0].length || y < 0)
+                return null;
+
+            if ((char) crossword[y][x] != s.charAt(i))
+                return null;
+            x++;
+            y--;
+        }
+        Word w = new Word(s);
+        w.setStartPoint(startX, startY);
+        w.setEndPoint(x - 1, y + 1);
+        return w;
+    }
+
+
+    public static Word checkE(int[][] crossword, int startX, int startY, String s) {
+        int x = startX + 1;
+        int y = startY;
+        for (int i = 1; i < s.length(); i++) {
+            if (x >= crossword[0].length)
+                return null;
+
+            if ((char) crossword[y][x] != s.charAt(i))
+                return null;
+            x++;
+        }
+        Word w = new Word(s);
+        w.setStartPoint(startX, startY);
+        w.setEndPoint(x - 1, y);
+        return w;
+    }
+
+    public static Word checkSE(int[][] crossword, int startX, int startY, String s) {
+        int x = startX + 1;
+        int y = startY + 1;
+        for (int i = 1; i < s.length(); i++) {
+            if (x >= crossword[0].length || y >= crossword.length)
+                return null;
+
+            if ((char) crossword[y][x] != s.charAt(i))
+                return null;
+            x++;
+            y++;
+        }
+        Word w = new Word(s);
+        w.setStartPoint(startX, startY);
+        w.setEndPoint(x - 1, y - 1);
+        return w;
+    }
+
+
+    public static Word checkS(int[][] crossword, int startX, int startY, String s) {
+        int x = startX;
+        int y = startY + 1;
+        for (int i = 1; i < s.length(); i++) {
+            if (y >= crossword.length)
+                return null;
+
+            if ((char) crossword[y][x] != s.charAt(i))
+                return null;
+            y++;
+        }
+        Word w = new Word(s);
+        w.setStartPoint(startX, startY);
+        w.setEndPoint(x, y - 1);
+        return w;
+    }
+
+    public static Word checkSW(int[][] crossword, int startX, int startY, String s) {
+        int x = startX - 1;
+        int y = startY + 1;
+        for (int i = 1; i < s.length(); i++) {
+            if (x < 0 || y >= crossword.length)
+                return null;
+
+            if ((char) crossword[y][x] != s.charAt(i))
+                return null;
+            x--;
+            y++;
+        }
+        Word w = new Word(s);
+        w.setStartPoint(startX, startY);
+        w.setEndPoint(x + 1, y - 1);
+        return w;
+    }
+
+    public static Word checkW(int[][] crossword, int startX, int startY, String s) {
+        int x = startX - 1;
+        int y = startY;
+        for (int i = 1; i < s.length(); i++) {
+            if (x < 0 || y >= crossword[0].length)
+                return null;
+
+            if ((char) crossword[y][x] != s.charAt(i))
+                return null;
+            x--;
+        }
+        Word w = new Word(s);
+        w.setStartPoint(startX, startY);
+        w.setEndPoint(x + 1, y);
+        return w;
+    }
+
+
+    public static List<Word> detectAllWords(int[][] crossword, String... words) {
+        ArrayList<Word> resWords = new ArrayList<>();
+
+        for (String word : words) {
+            char latter = word.charAt(0);
+
+            //Search first latter in the crossword
+            for (int i = 0; i < crossword.length; i++) {
+                for (int j = 0; j < crossword[i].length; j++) {
+
+                    if ((char) crossword[i][j] == latter) { //ok, first latter from word has been finded.
+                        int startX = j;
+                        int startY = i;
+
+                        Word[] vector = new Word[8];
+
+                        vector[0] = checkNE(crossword, startX, startY, word);
+                        vector[1] = checkN(crossword, startX, startY, word);
+                        vector[2] = checkNW(crossword, startX, startY, word);
+                        vector[3] = checkE(crossword, startX, startY, word);
+                        vector[4] = checkSE(crossword, startX, startY, word);
+                        vector[5] = checkS(crossword, startX, startY, word);
+                        vector[6] = checkSW(crossword, startX, startY, word);
+                        vector[7] = checkW(crossword, startX, startY, word);
+
+                        for (int ii = 0; ii < vector.length; ii++)
+                            if (vector[ii] != null)
+                                resWords.add(vector[ii]);
+                    }
+                }
+            }
+        }
+        return resWords;
     }
 
     public static class Word {
