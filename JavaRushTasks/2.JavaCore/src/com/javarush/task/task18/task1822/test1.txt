@@ -1,0 +1,12 @@
+1 Nissan 12.000 4
+2 Toyota 13.000 5
+3 Lada 1.000 5
+4 Land Rover 40.000 7
+5 Nissan 12.000 4
+6 Toyota 13.000 5
+7 Lada 1.000 5
+8 Land Rover 40.000 7
+9 Nissan 12.000 4
+10 Toyota 13.000 5
+11 Lada 1.000 5
+12 Land Rover 40.000 7
